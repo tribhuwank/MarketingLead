@@ -67,7 +67,7 @@ public static class TeamEndpoints
             .ToListAsync();
 
         return Results.Ok(teams.Select(team =>
-            new ApiTeam(team.Id, team.Name)));
+            new ApiTeam(team.Id, team.Name, team.TeamLeadId, team.ClientManagerId)));
     }
 
     private static async Task<IResult> GetTeam([FromRoute] int teamId, ClaimsPrincipal principal, MarketingLeadDb db)
@@ -80,7 +80,7 @@ public static class TeamEndpoints
         if (team == null) return Results.NotFound();
 
         return Results.Ok(
-            new ApiTeam(team.Id, team.Name));
+            new ApiTeam(team.Id, team.Name,team.TeamLeadId,team.ClientManagerId));
     }
 
     private static async Task<IResult> DeleteTeam([FromRoute] int teamId, ClaimsPrincipal principal, MarketingLeadDb db)
@@ -111,11 +111,13 @@ public static class TeamEndpoints
         }
 
         team.Name = apiTeam.Name;
+        team.TeamLeadId= apiTeam.TeamLeadId;
+        team.ClientManagerId = apiTeam.ClientManagerId;
 
         await db.SaveChangesAsync();
         return Results.Accepted(
             link.GetUriByName(http, ById, new { teamId = team.Id })!,
-            new ApiTeam(team.Id, team.Name));
+            new ApiTeam(team.Id, team.Name, team.TeamLeadId, team.ClientManagerId));
     }
 
     private static async Task<IResult> CreateTeam([FromBody] ApiTeam apiTeam, ClaimsPrincipal principal, MarketingLeadDb db, HttpContext http, LinkGenerator link)
@@ -127,11 +129,13 @@ public static class TeamEndpoints
 
         var team = new Team
         {
-            Name = apiTeam.Name
+            Name = apiTeam.Name,
+            TeamLeadId= apiTeam.TeamLeadId,
+            ClientManagerId=apiTeam.ClientManagerId
         };
         db.Teams.Add(team);
         await db.SaveChangesAsync();
         return Results.Created(link.GetUriByName(http, ById, new { teamId = team.Id })!,
-            new ApiTeam(team.Id, team.Name));
+            new ApiTeam(team.Id, team.Name, team.TeamLeadId, team.ClientManagerId));
     }
 }

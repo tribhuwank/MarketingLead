@@ -13,7 +13,7 @@ public class MarketingLeadDb:DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().HasIndex(u => new { u.ContactInfo,u.Role }).IsUnique();
-        modelBuilder.Entity<Team>().HasIndex(u => u.Name).IsUnique();
+        modelBuilder.Entity<Team>().HasIndex(u => new { u.Name ,u.TeamLeadId}).IsUnique();
         modelBuilder.Entity<Lead>().HasIndex(u => new { u.Name, u.AccountId }).IsUnique();
         modelBuilder.Entity<Lead>().HasIndex(u => new { u.Name, u.ClientManagerId }).IsUnique();
         modelBuilder.Entity<PaymentCategory>().HasIndex(u => u.Name).IsUnique();

@@ -6,6 +6,8 @@ using MarketingLead.API.Middlewares;
 using MarketingLead.API.Startup;
 using MarketingLead.API.Data;
 using System.Text;
+using MarketingLead.API.Security;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +23,15 @@ builder.AddSwaggerServices();
 builder.Services.AddHealthChecks();
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddAuthorization(o =>
+{
+    o.AddPolicy("Team Leads", p => p.AddRequirements(new AdminRoleRequirement("Admin")));
+    o.AddPolicy("Team Leads", p => p.AddRequirements(new AdminRoleRequirement("Client Manager")));
+
+});
+builder.Services.AddSingleton<IAuthorizationHandler, AdminRoleRequirementHandler>();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -8,8 +8,9 @@ namespace MarketingLead.API.Entities
         [Required] public string FirstName { get; set; } =String.Empty;
         [Required] public string LastName { get; set; } =String.Empty;
         [Required] public string ContactInfo { get; set; } = String.Empty;
-        [Required] public string Role { get; set; } = string.Empty;
-        [Required] public string Password { get; set; } =String.Empty;      
-
+        [Required] public string Role { get; set; } = string.Empty;       
+        [Required] public string Password { get; set; } =String.Empty;
+        public int? TeamId { get; set; }
+        public Team Team { get; set; } = new Team();
     }
 }

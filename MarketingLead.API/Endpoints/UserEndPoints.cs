@@ -67,7 +67,7 @@ public static class UserEndPoints
             .ToListAsync();
 
         return Results.Ok(users.Select(user =>
-            new ApiUser(user.Id, user.FirstName, user.LastName,user.ContactInfo,user.Password,user.Role)));
+            new ApiUser(user.Id, user.FirstName, user.LastName,user.ContactInfo,user.Password,user.Role,user.TeamId)));
     }
 
     private static async Task<IResult> GetUser([FromRoute] int userId, ClaimsPrincipal principal, MarketingLeadDb db)
@@ -80,7 +80,7 @@ public static class UserEndPoints
         if (user == null) return Results.NotFound();
 
         return Results.Ok(
-            new ApiUser(user.Id, user.FirstName,user.LastName,user.ContactInfo, user.Role, user.Password));
+            new ApiUser(user.Id, user.FirstName,user.LastName,user.ContactInfo, user.Role, user.Password, user.TeamId));
     }
 
     private static async Task<IResult> DeleteUser([FromRoute] int userId, ClaimsPrincipal principal, MarketingLeadDb db)
@@ -115,11 +115,12 @@ public static class UserEndPoints
         user.ContactInfo = apiUser.ContactInfo;
         user.Role = apiUser.Role;
         user.Password = apiUser.Password;
+        user.TeamId= apiUser.TeamId;
 
         await db.SaveChangesAsync();
         return Results.Accepted(
             link.GetUriByName(http, ById, new { userId = user.Id })!,
-            new ApiUser(user.Id, user.FirstName, user.LastName, user.ContactInfo, user.Role, user.Password));
+            new ApiUser(user.Id, user.FirstName, user.LastName, user.ContactInfo, user.Role, user.Password, user.TeamId));
     }
 
     private static async Task<IResult> CreateUser([FromBody] ApiUser apiUser, ClaimsPrincipal principal, MarketingLeadDb db, HttpContext http, LinkGenerator link)
@@ -135,11 +136,12 @@ public static class UserEndPoints
             LastName = apiUser.LastName,
             ContactInfo = apiUser.ContactInfo,
             Role = apiUser.Role,
-            Password = apiUser.Password
+            Password = apiUser.Password,
+            TeamId= apiUser.TeamId
         };
         db.Users.Add(user);
         await db.SaveChangesAsync();
         return Results.Created(link.GetUriByName(http, ById, new { userId = user.Id })!,
-            new ApiUser(user.Id, user.FirstName, user.LastName, user.ContactInfo, user.Role, user.Password));
+            new ApiUser(user.Id, user.FirstName, user.LastName, user.ContactInfo, user.Role, user.Password, user.TeamId));
     }
 }

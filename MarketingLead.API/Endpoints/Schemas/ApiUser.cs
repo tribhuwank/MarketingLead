@@ -9,4 +9,5 @@ public record ApiUser(
     [property: Required] string LastName,
     [property: Required] string ContactInfo,
     [property: Required] string Role,
-    [property: Required] string Password);
+    [property: Required] string Password,
+     int? TeamId);

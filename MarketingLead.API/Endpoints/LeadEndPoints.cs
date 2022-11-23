@@ -3,7 +3,6 @@ using MarketingLead.API.Endpoints.Schemas;
 using MarketingLead.API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using MiniValidation;
 using System.Security.Claims;
 
