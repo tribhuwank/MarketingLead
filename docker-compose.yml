@@ -1,0 +1,20 @@
+version: '3.4'
+
+
+services:
+  MarketingLead.API:
+    depends_on:
+      - "db"
+    image: ${DOCKER_REGISTRY-}MarketingLeadapi
+    build:
+      context: .
+      dockerfile: MarketingLead.API/Dockerfile 
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    restart: always
+    environment:
+      SA_PASSWORD: "Admin@2022"
+      ACCEPT_EULA: "Y"
+ 
